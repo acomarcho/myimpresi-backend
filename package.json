@@ -24,6 +24,8 @@
   },
   "_moduleAliases": {
     "@routes": "dist/routes",
-    "@controllers": "dist/controllers"
+    "@controllers": "dist/controllers",
+    "@services": "dist/services",
+    "@models": "dist/models"
   }
 }
