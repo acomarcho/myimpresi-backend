@@ -30,7 +30,8 @@
     "@routes": "dist/routes",
     "@controllers": "dist/controllers",
     "@services": "dist/services",
-    "@models": "dist/models"
+    "@models": "dist/models",
+    "@utils": "dist/utils"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"

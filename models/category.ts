@@ -1,18 +1,8 @@
+import prisma from "@utils/prisma";
+
 const FindAllCategories = async () => {
-  return [
-    {
-      id: 1,
-      name: "Jam",
-    },
-    {
-      id: 2,
-      name: "Payung",
-    },
-    {
-      id: 3,
-      name: "Drinkware",
-    },
-  ];
+  const categories = await prisma.category.findMany();
+  return categories;
 };
 
 export default {
