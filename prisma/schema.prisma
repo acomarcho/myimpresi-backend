@@ -12,13 +12,13 @@ datasource db {
 
 model Category {
   id          Int           @id @default(autoincrement())
-  name        String
+  name        String        @unique
   Subcategory Subcategory[]
 }
 
 model Subcategory {
   id         Int       @id @default(autoincrement())
-  name       String
+  name       String    @unique
   category   Category  @relation(fields: [categoryId], references: [id])
   categoryId Int
   Product    Product[]

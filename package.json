@@ -22,6 +22,8 @@
     "@types/node": "^20.8.6",
     "concurrently": "^8.2.1",
     "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.2.2"
   },
   "_moduleAliases": {
@@ -29,5 +31,8 @@
     "@controllers": "dist/controllers",
     "@services": "dist/services",
     "@models": "dist/models"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   }
 }
