@@ -13,7 +13,9 @@ datasource db {
 model Category {
   id          Int           @id @default(autoincrement())
   name        String        @unique
-  Subcategory Subcategory[]
+  isFeatured  Boolean
+  imagePath   String
+  subcategory Subcategory[]
 }
 
 model Subcategory {
@@ -33,7 +35,7 @@ model Product {
   description   String
   subcategory   Subcategory    @relation(fields: [subcategoryId], references: [id])
   subcategoryId Int
-  ProductImage  ProductImage[]
+  productImage  ProductImage[]
 }
 
 model ProductImage {
