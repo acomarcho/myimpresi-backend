@@ -1,6 +1,6 @@
 import CategoryService from "@services/category";
-
 import { Request, Response } from "express";
+import { SaveCategoryRequest } from "@constants/requests";
 
 const FindAllCategories = async (req: Request, res: Response) => {
   try {
@@ -11,10 +11,6 @@ const FindAllCategories = async (req: Request, res: Response) => {
       error: e,
     });
   }
-};
-
-type SaveCategoryRequest = {
-  name: string;
 };
 
 const SaveCategory = async (req: Request, res: Response) => {

@@ -8,6 +8,7 @@ const router = express.Router();
 
 // GET /category
 router.get("/", CategoryController.FindAllCategories);
+// POST /category
 router.post(
   "/",
   checkApiKey,
