@@ -1,23 +1,23 @@
-import CategoryModel from "@models/category";
+import BannerModel from "@models/banner";
 import supabase from "@utils/supabase";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
 
-const FindAllCategories = async () => {
-  const categories = await CategoryModel.FindAllCategories();
+const FindAllBanners = async () => {
+  const banners = await BannerModel.FindAllBanners();
 
   return {
-    categories,
+    banners,
   };
 };
 
-const SaveCategory = async (file: Express.Multer.File, name: string) => {
+const SaveBanner = async (file: Express.Multer.File) => {
   const uuid = uuidv4();
   const fileName = `${uuid}${path.extname(file.originalname)}`;
 
   const { data: uploadData, error } = await supabase.storage
     .from("images")
-    .upload(`categories/${fileName}`, file.buffer, {
+    .upload(`banners/${fileName}`, file.buffer, {
       contentType: file.mimetype,
     });
 
@@ -29,16 +29,12 @@ const SaveCategory = async (file: Express.Multer.File, name: string) => {
     .from("images")
     .getPublicUrl(uploadData.path);
 
-  const newCategory = await CategoryModel.SaveCategory(
-    name,
-    false,
-    imageUrl.publicUrl
-  );
+  const newBanner = await BannerModel.SaveBanner(imageUrl.publicUrl);
 
-  return newCategory;
+  return newBanner;
 };
 
 export default {
-  FindAllCategories,
-  SaveCategory,
+  FindAllBanners,
+  SaveBanner,
 };
