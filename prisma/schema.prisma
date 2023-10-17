@@ -45,3 +45,9 @@ model ProductImage {
   product   Product @relation(fields: [productId], references: [id])
   productId Int
 }
+
+model Banner {
+  id        Int    @id @default(autoincrement())
+  imagePath String
+  rank      Int?
+}
