@@ -1,7 +1,14 @@
 import prisma from "@utils/prisma";
 
 const FindAllCategories = async () => {
-  const categories = await prisma.category.findMany();
+  const categories = await prisma.category.findMany({
+    orderBy: {
+      rank: {
+        sort: "asc",
+        nulls: "last",
+      },
+    },
+  });
   return categories;
 };
 

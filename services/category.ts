@@ -26,7 +26,7 @@ const SaveCategory = async (file: Express.Multer.File, name: string) => {
     throw error;
   }
 
-  const { data: imageUrl } = await supabase.storage
+  const { data: imageUrl } = supabase.storage
     .from("images")
     .getPublicUrl(uploadData.path);
 

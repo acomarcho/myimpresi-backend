@@ -13,8 +13,9 @@ datasource db {
 model Category {
   id          Int           @id @default(autoincrement())
   name        String        @unique
-  isFeatured  Boolean
+  isFeatured  Boolean       @default(false)
   imagePath   String
+  rank        Int?
   subcategory Subcategory[]
 }
 
