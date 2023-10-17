@@ -3,6 +3,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   await prisma.category.deleteMany();
+  await prisma.banner.deleteMany();
 }
 
 main()
