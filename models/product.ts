@@ -22,6 +22,8 @@ const SaveProduct = async (product: Product, imagePaths: string[]) => {
         },
       });
     }
+
+    return createdProduct;
   });
 
   return newProduct;
