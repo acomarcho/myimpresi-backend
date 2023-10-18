@@ -8,6 +8,7 @@ import { rateLimit } from "express-rate-limit";
 
 import CategoryRouter from "@routes/category";
 import BannerRouter from "@routes/banner";
+import SubcategoryRouter from "@routes/subcategory";
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(rateLimit({ windowMs: 1000 * 60, limit: 100 }));
 
 app.use("/category", CategoryRouter);
 app.use("/banner", BannerRouter);
+app.use("/subcategory", SubcategoryRouter);
 
 const port = process.env.PORT;
 app.listen(port, () => {

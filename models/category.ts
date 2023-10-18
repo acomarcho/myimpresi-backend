@@ -22,6 +22,22 @@ const FindAllCategories = async () => {
   return categories;
 };
 
+const FindCategoryById = async (id: number) => {
+  const unparsedCategory = await redisClient.get(`categories:${id}`);
+  if (unparsedCategory) {
+    const category: Category = JSON.parse(unparsedCategory);
+    return category;
+  }
+
+  const category = await prisma.category.findUnique({
+    where: {
+      id: id,
+    },
+  });
+  await redisClient.setEx(`categories:${id}`, 300, JSON.stringify(category));
+  return category;
+};
+
 const SaveCategory = async (
   name: string,
   isFeatured: boolean,
@@ -40,5 +56,6 @@ const SaveCategory = async (
 
 export default {
   FindAllCategories,
+  FindCategoryById,
   SaveCategory,
 };
