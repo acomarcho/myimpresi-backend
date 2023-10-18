@@ -12,7 +12,7 @@ const SaveProduct = async (product: Product, images: Express.Multer.File[]) => {
   );
 
   if (!subcategory) {
-    throw createHttpError(400, null, "Category ID doesn't exist");
+    throw createHttpError(400, null, "Subcategory ID doesn't exist");
   }
 
   const imageUrls: string[] = [];
