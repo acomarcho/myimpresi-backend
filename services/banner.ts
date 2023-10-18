@@ -2,6 +2,7 @@ import BannerModel from "@models/banner";
 import supabase from "@utils/supabase";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
+import { createHttpError } from "@utils/error";
 
 const FindAllBanners = async () => {
   const banners = await BannerModel.FindAllBanners();
@@ -22,7 +23,7 @@ const SaveBanner = async (file: Express.Multer.File) => {
     });
 
   if (error) {
-    throw error;
+    throw createHttpError(500, error, "Failed uploading to Supabase");
   }
 
   const { data: imageUrl } = supabase.storage

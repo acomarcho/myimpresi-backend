@@ -1,5 +1,5 @@
 export type HttpError = {
   status: number;
-  error: Error;
+  error: any;
   message: string;
 };

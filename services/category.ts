@@ -2,6 +2,7 @@ import CategoryModel from "@models/category";
 import supabase from "@utils/supabase";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
+import { createHttpError } from "@utils/error";
 
 const FindAllCategories = async () => {
   const categories = await CategoryModel.FindAllCategories();
@@ -22,7 +23,7 @@ const SaveCategory = async (file: Express.Multer.File, name: string) => {
     });
 
   if (error) {
-    throw error;
+    throw createHttpError(500, error, "Failed uploading to Supabase");
   }
 
   const { data: imageUrl } = supabase.storage
