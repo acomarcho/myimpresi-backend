@@ -1,4 +1,4 @@
-import { HttpError } from "@constants/requests";
+import { HttpError } from "@constants/errors";
 
 export function createHttpError(
   status: number,
