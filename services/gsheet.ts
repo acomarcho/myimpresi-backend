@@ -15,15 +15,17 @@ const AppendContact = async (req: AppendContactRequest) => {
   }
 
   const doc = new GoogleSpreadsheet(spreadsheetId, serviceAccountAuth);
+  await doc.loadInfo();
+
   const sheet = doc.sheetsByIndex[0];
 
-  await sheet.addRow({
-    Timestamp: new Date().toISOString(),
-    Nama: req.name,
-    Email: req.email,
-    "No HP": req.phone,
-    Kota: req.city,
-  });
+  await sheet.addRow([
+    new Date().toISOString(),
+    req.name,
+    req.email,
+    req.phone,
+    req.city,
+  ]);
 };
 
 export default {
