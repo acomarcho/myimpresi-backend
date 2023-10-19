@@ -15,7 +15,7 @@ const AppendContact = async (req: AppendContactRequest) => {
   );
   const recaptchaResponse: RecaptchaResponse = response.data;
 
-  if (!recaptchaResponse) {
+  if (!recaptchaResponse.success) {
     throw createHttpError(401, null, "Invalid reCAPTCHA token");
   }
 
