@@ -3,4 +3,5 @@ export type AppendContactRequest = {
   email: string;
   phone: string;
   city: string;
+  recaptchaToken: string;
 };
