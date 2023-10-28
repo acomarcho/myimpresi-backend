@@ -15,6 +15,9 @@ const AppendContact = async (req: Request, res: Response) => {
     if (!parsedReq.phone) {
       throw createHttpError(400, null, "Phone number is not supplied");
     }
+    if (!parsedReq.recaptchaToken) {
+      throw createHttpError(400, null, "Recaptcha token is not supplied");
+    }
 
     await GSheetService.AppendContact(parsedReq);
     res.status(200).json({

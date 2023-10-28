@@ -2,14 +2,25 @@ import { AppendContactRequest } from "@constants/requests/gsheet";
 import { serviceAccountAuth } from "@utils/gsheet";
 import { GoogleSpreadsheet } from "google-spreadsheet";
 import { createHttpError } from "@utils/error";
+import axios from "axios";
+import { RecaptchaResponse } from "@constants/responses";
 
 const AppendContact = async (req: AppendContactRequest) => {
+  const response = await axios.put(
+    `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${req.recaptchaToken}`
+  );
+  const recaptchaResponse: RecaptchaResponse = response.data;
+
+  if (!recaptchaResponse.success) {
+    throw createHttpError(401, recaptchaResponse, "Invalid reCAPTCHA token");
+  }
+
   const spreadsheetId = process.env.SPREADSHEET_ID;
 
   if (!spreadsheetId) {
     throw createHttpError(
       500,
-      "",
+      null,
       "Missing spreadsheet configuration not yet enabled"
     );
   }
