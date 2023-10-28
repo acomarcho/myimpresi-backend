@@ -22,7 +22,7 @@ const FindAllCategories = async () => {
   return categories;
 };
 
-const FindCategoryById = async (id: number) => {
+const FindCategoryById = async (id: string) => {
   const unparsedCategory = await redisClient.get(`categories:${id}`);
   if (unparsedCategory) {
     const category: Category = JSON.parse(unparsedCategory);
