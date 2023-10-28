@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Category {
-  id          Int           @id @default(autoincrement())
+  id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name        String        @unique
   isFeatured  Boolean       @default(false)
   imagePath   String
@@ -20,34 +20,34 @@ model Category {
 }
 
 model Subcategory {
-  id         Int       @id @default(autoincrement())
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name       String    @unique
   category   Category  @relation(fields: [categoryId], references: [id])
-  categoryId Int
+  categoryId String    @db.Uuid
   product    Product[]
 }
 
 model Product {
-  id            Int            @id @default(autoincrement())
+  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name          String
   price         Int
   soldAmount    Int
   minimumOrder  Int
   description   String
   subcategory   Subcategory    @relation(fields: [subcategoryId], references: [id])
-  subcategoryId Int
+  subcategoryId String         @db.Uuid
   productImage  ProductImage[]
 }
 
 model ProductImage {
-  id        Int     @id @default(autoincrement())
+  id        String  @id @default(dbgenerated("gen_random_uuid()"))
   path      String
   product   Product @relation(fields: [productId], references: [id])
-  productId Int
+  productId String  @db.Uuid
 }
 
 model Banner {
-  id        Int    @id @default(autoincrement())
+  id        String @id @default(dbgenerated("gen_random_uuid()"))
   imagePath String
   rank      Int?
 }
