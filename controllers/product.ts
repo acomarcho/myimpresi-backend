@@ -1,7 +1,7 @@
 import ProductService from "@services/product";
 import { Request, Response } from "express";
 import { SaveProductRequest } from "@constants/requests";
-import { createHttpError, isHttpError } from "@utils/error";
+import { createHttpError, handleError } from "@utils/error";
 import { Product } from "@prisma/client";
 
 const SaveProduct = async (req: Request, res: Response) => {
@@ -29,16 +29,7 @@ const SaveProduct = async (req: Request, res: Response) => {
       data: newProduct,
     });
   } catch (e) {
-    if (isHttpError(e)) {
-      return res.status(e.status).json({
-        error: e.error,
-        message: e.message,
-      });
-    }
-    res.status(500).json({
-      error: e,
-      message: "Internal server error",
-    });
+    handleError(e, res);
   }
 };
 

@@ -1,4 +1,6 @@
 import { HttpError } from "@constants/errors";
+import { Response } from "express";
+import { logger } from "./logger";
 
 export function createHttpError(
   status: number,
@@ -22,4 +24,23 @@ export function isHttpError(e: any): e is HttpError {
     "message" in e &&
     typeof e["message"] === "string"
   );
+}
+
+export function handleError(e: unknown, res: Response) {
+  if (isHttpError(e)) {
+    if (e.status >= 500) {
+      logger.error(e);
+    }
+
+    return res.status(e.status).json({
+      error: e.error,
+      message: e.message,
+    });
+  }
+
+  logger.error(e);
+  res.status(500).json({
+    error: e,
+    message: "Internal server error",
+  });
 }

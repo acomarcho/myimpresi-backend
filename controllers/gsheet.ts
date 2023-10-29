@@ -1,7 +1,7 @@
 import GSheetService from "@services/gsheet";
 import { Request, Response } from "express";
 import { AppendContactRequest } from "@constants/requests/gsheet";
-import { createHttpError, isHttpError } from "@utils/error";
+import { createHttpError, handleError } from "@utils/error";
 
 const AppendContact = async (req: Request, res: Response) => {
   try {
@@ -24,16 +24,7 @@ const AppendContact = async (req: Request, res: Response) => {
       message: "Successfully added row",
     });
   } catch (e) {
-    if (isHttpError(e)) {
-      return res.status(e.status).json({
-        error: e.error,
-        message: e.message,
-      });
-    }
-    res.status(500).json({
-      error: e,
-      message: "Internal server error",
-    });
+    handleError(e, res);
   }
 };
 
