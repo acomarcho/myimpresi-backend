@@ -39,7 +39,7 @@ const FindProductsBySubcategory = async (subcategoryId: string) => {
     `subcategory:${subcategoryId}:products`
   );
   if (unparsedProducts) {
-    const products: ProductWithProductImage = JSON.parse(unparsedProducts);
+    const products: ProductWithProductImage[] = JSON.parse(unparsedProducts);
     return products;
   }
 
