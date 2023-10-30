@@ -15,5 +15,10 @@ router.post(
   upload.single("file"),
   CategoryController.SaveCategory
 );
+// GET /category/featured-products
+router.get(
+  "/featured-products",
+  CategoryController.FindAllCategoryFeaturedProducts
+);
 
 export default router;
