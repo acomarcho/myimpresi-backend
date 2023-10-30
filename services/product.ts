@@ -1,4 +1,5 @@
 import SubcategoryModel from "@models/subcategory";
+import CategoryModel from "@models/category";
 import ProductModel from "@models/product";
 import { createHttpError } from "@utils/error";
 import { Product } from "@prisma/client";
@@ -52,7 +53,18 @@ const FindProductsBySubcategory = async (subcategoryId: string) => {
   return products;
 };
 
+const FindProductsByCategory = async (categoryId: string) => {
+  const category = await CategoryModel.FindCategoryById(categoryId);
+  if (!category) {
+    throw createHttpError(400, null, "Category ID doesn't exist");
+  }
+
+  const products = await ProductModel.FindProductsByCategory(categoryId);
+  return products;
+};
+
 export default {
   SaveProduct,
   FindProductsBySubcategory,
+  FindProductsByCategory,
 };

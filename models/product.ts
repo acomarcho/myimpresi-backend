@@ -59,7 +59,35 @@ const FindProductsBySubcategory = async (subcategoryId: string) => {
   return products;
 };
 
+const FindProductsByCategory = async (categoryId: string) => {
+  const unparsedProducts = await redisClient.get(
+    `category:${categoryId}:products`
+  );
+  if (unparsedProducts) {
+    const products: ProductWithProductImage[] = JSON.parse(unparsedProducts);
+    return products;
+  }
+
+  const products = await prisma.product.findMany({
+    where: {
+      subcategory: {
+        categoryId: categoryId,
+      },
+    },
+    include: {
+      productImage: true,
+    },
+  });
+  await redisClient.setEx(
+    `category:${categoryId}:products`,
+    300,
+    JSON.stringify(products)
+  );
+  return products;
+};
+
 export default {
   SaveProduct,
   FindProductsBySubcategory,
+  FindProductsByCategory,
 };

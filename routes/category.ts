@@ -20,5 +20,7 @@ router.get(
   "/featured-products",
   CategoryController.FindAllCategoryFeaturedProducts
 );
+// GET /category/:id/product
+router.get("/:id/product", CategoryController.FindProductsByCategory);
 
 export default router;

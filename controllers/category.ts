@@ -1,4 +1,5 @@
 import CategoryService from "@services/category";
+import ProductService from "@services/product";
 import { Request, Response } from "express";
 import { SaveCategoryRequest } from "@constants/requests";
 import { createHttpError, handleError } from "@utils/error";
@@ -48,8 +49,23 @@ const FindAllCategoryFeaturedProducts = async (req: Request, res: Response) => {
   }
 };
 
+const FindProductsByCategory = async (req: Request, res: Response) => {
+  try {
+    const { id: categoryId } = req.params;
+
+    const products = await ProductService.FindProductsByCategory(categoryId);
+
+    res.status(200).json({
+      data: products,
+    });
+  } catch (e) {
+    handleError(e, res);
+  }
+};
+
 export default {
   FindAllCategories,
   SaveCategory,
   FindAllCategoryFeaturedProducts,
+  FindProductsByCategory,
 };
