@@ -54,31 +54,6 @@ const SaveCategory = async (
   return newCategory;
 };
 
-export type FeaturedCategories = {
-  id: string;
-  name: string;
-  subcategory: {
-    id: string;
-    name: string;
-    product: ({
-      productImage: {
-        id: string;
-        path: string;
-        productId: string;
-      }[];
-    } & {
-      id: string;
-      name: string;
-      price: number;
-      soldAmount: number;
-      minimumOrder: number;
-      description: string;
-      subcategoryId: string;
-      isFeaturedAtCategory: boolean;
-    })[];
-  }[];
-}[];
-
 export default {
   FindAllCategories,
   FindCategoryById,
