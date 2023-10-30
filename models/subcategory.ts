@@ -25,7 +25,11 @@ const FindSubcategoryById = async (id: string) => {
       id: id,
     },
   });
-  await redisClient.setEx(`categories:${id}`, 300, JSON.stringify(subcategory));
+  await redisClient.setEx(
+    `subcategories:${id}`,
+    300,
+    JSON.stringify(subcategory)
+  );
   return subcategory;
 };
 
