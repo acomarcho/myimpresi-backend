@@ -1,4 +1,5 @@
 import SubcategoryService from "@services/subcategory";
+import ProductService from "@services/product";
 import { Request, Response } from "express";
 import { SaveSubcategoryRequest } from "@constants/requests";
 import { createHttpError, handleError } from "@utils/error";
@@ -26,6 +27,23 @@ const SaveSubcategory = async (req: Request, res: Response) => {
   }
 };
 
+const FindProductsBySubcategory = async (req: Request, res: Response) => {
+  try {
+    const { id: subcategoryId } = req.params;
+
+    const products = await ProductService.FindProductsBySubcategory(
+      subcategoryId
+    );
+
+    res.status(200).json({
+      data: products,
+    });
+  } catch (e) {
+    handleError(e, res);
+  }
+};
+
 export default {
   SaveSubcategory,
+  FindProductsBySubcategory,
 };

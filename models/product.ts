@@ -1,5 +1,10 @@
 import prisma from "@utils/prisma";
-import { Product } from "@prisma/client";
+import { Product, ProductImage } from "@prisma/client";
+import { redisClient } from "@utils/redis";
+
+export type ProductWithProductImage = {
+  productImage: ProductImage[];
+} & Product;
 
 const SaveProduct = async (product: Product, imagePaths: string[]) => {
   const newProduct = await prisma.$transaction(async (tx) => {
@@ -29,6 +34,32 @@ const SaveProduct = async (product: Product, imagePaths: string[]) => {
   return newProduct;
 };
 
+const FindProductsBySubcategory = async (subcategoryId: string) => {
+  const unparsedProducts = await redisClient.get(
+    `subcategory:${subcategoryId}:products`
+  );
+  if (unparsedProducts) {
+    const products: ProductWithProductImage = JSON.parse(unparsedProducts);
+    return products;
+  }
+
+  const products = await prisma.product.findMany({
+    where: {
+      subcategoryId: subcategoryId,
+    },
+    include: {
+      productImage: true,
+    },
+  });
+  await redisClient.setEx(
+    `subcategory:${subcategoryId}:products`,
+    300,
+    JSON.stringify(products)
+  );
+  return products;
+};
+
 export default {
   SaveProduct,
+  FindProductsBySubcategory,
 };

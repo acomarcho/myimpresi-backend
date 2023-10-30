@@ -42,6 +42,17 @@ const SaveProduct = async (product: Product, images: Express.Multer.File[]) => {
   return newProduct;
 };
 
+const FindProductsBySubcategory = async (subcategoryId: string) => {
+  const subcategory = await SubcategoryModel.FindSubcategoryById(subcategoryId);
+  if (!subcategory) {
+    throw createHttpError(400, null, "Subcategory ID doesn't exist");
+  }
+
+  const products = await ProductModel.FindProductsBySubcategory(subcategoryId);
+  return products;
+};
+
 export default {
   SaveProduct,
+  FindProductsBySubcategory,
 };
