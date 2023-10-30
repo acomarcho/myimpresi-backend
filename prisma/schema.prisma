@@ -37,7 +37,7 @@ model Product {
   subcategory          Subcategory    @relation(fields: [subcategoryId], references: [id])
   subcategoryId        String         @db.Uuid
   productImage         ProductImage[]
-  isFeaturedAtCategory Boolean
+  isFeaturedAtCategory Boolean        @default(false)
 }
 
 model ProductImage {
