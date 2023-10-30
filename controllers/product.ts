@@ -45,7 +45,25 @@ const FindFeaturedProducts = async (req: Request, res: Response) => {
   }
 };
 
+const FindProduct = async (req: Request, res: Response) => {
+  try {
+    const { id: productId } = req.params;
+    const product = await ProductService.FindProduct(productId);
+
+    if (!product) {
+      throw createHttpError(404, null, "Product ID not found");
+    }
+
+    res.status(200).json({
+      data: product,
+    });
+  } catch (e) {
+    handleError(e, res);
+  }
+};
+
 export default {
   SaveProduct,
   FindFeaturedProducts,
+  FindProduct,
 };

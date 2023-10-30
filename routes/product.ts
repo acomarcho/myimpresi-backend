@@ -15,5 +15,7 @@ router.post(
 );
 // GET /product/featured
 router.get("/featured", ProductController.FindFeaturedProducts);
+// GET /product/:id
+router.get("/:id", ProductController.FindProduct);
 
 export default router;

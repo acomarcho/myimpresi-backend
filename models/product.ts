@@ -106,9 +106,27 @@ const FindFeaturedProducts = async () => {
   return products;
 };
 
+const FindProduct = async (productId: string) => {
+  const redisKey = `products:${productId}`;
+  const unparsedProduct = await redisClient.get(redisKey);
+  if (unparsedProduct) {
+    const product: Product = JSON.parse(unparsedProduct);
+    return product;
+  }
+
+  const product = await prisma.product.findUnique({
+    where: {
+      id: productId,
+    },
+  });
+  await redisClient.setEx(redisKey, 300, JSON.stringify(product));
+  return product;
+};
+
 export default {
   SaveProduct,
   FindProductsBySubcategory,
   FindProductsByCategory,
   FindFeaturedProducts,
+  FindProduct,
 };
