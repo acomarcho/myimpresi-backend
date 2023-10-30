@@ -57,13 +57,19 @@ const SaveCategory = async (
 const FindAllCategoryFeaturedProducts = async () => {
   const products = await prisma.category.findMany({
     select: {
+      id: true,
+      name: true,
       subcategory: {
         select: {
+          id: true,
+          name: true,
           product: {
             where: {
               isFeaturedAtCategory: true,
             },
-            select: {},
+            include: {
+              productImage: true,
+            },
           },
         },
       },
