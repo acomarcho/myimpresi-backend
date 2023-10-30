@@ -28,15 +28,16 @@ model Subcategory {
 }
 
 model Product {
-  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name          String
-  price         Int
-  soldAmount    Int
-  minimumOrder  Int
-  description   String
-  subcategory   Subcategory    @relation(fields: [subcategoryId], references: [id])
-  subcategoryId String         @db.Uuid
-  productImage  ProductImage[]
+  id                   String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                 String
+  price                Int
+  soldAmount           Int
+  minimumOrder         Int
+  description          String
+  subcategory          Subcategory    @relation(fields: [subcategoryId], references: [id])
+  subcategoryId        String         @db.Uuid
+  productImage         ProductImage[]
+  isFeaturedAtCategory Boolean
 }
 
 model ProductImage {
