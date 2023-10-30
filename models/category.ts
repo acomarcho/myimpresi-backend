@@ -54,8 +54,28 @@ const SaveCategory = async (
   return newCategory;
 };
 
+const FindAllCategoryFeaturedProducts = async () => {
+  const products = await prisma.category.findMany({
+    select: {
+      subcategory: {
+        select: {
+          product: {
+            where: {
+              isFeaturedAtCategory: true,
+            },
+            select: {},
+          },
+        },
+      },
+    },
+  });
+
+  return products;
+};
+
 export default {
   FindAllCategories,
   FindCategoryById,
   SaveCategory,
+  FindAllCategoryFeaturedProducts,
 };
