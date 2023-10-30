@@ -54,7 +54,38 @@ const SaveCategory = async (
   return newCategory;
 };
 
+export type FeaturedCategories = {
+  id: string;
+  name: string;
+  subcategory: {
+    id: string;
+    name: string;
+    product: ({
+      productImage: {
+        id: string;
+        path: string;
+        productId: string;
+      }[];
+    } & {
+      id: string;
+      name: string;
+      price: number;
+      soldAmount: number;
+      minimumOrder: number;
+      description: string;
+      subcategoryId: string;
+      isFeaturedAtCategory: boolean;
+    })[];
+  }[];
+}[];
+
 const FindAllCategoryFeaturedProducts = async () => {
+  const unparsedProducts = await redisClient.get(`featured-products`);
+  if (unparsedProducts) {
+    const products: FeaturedCategories = JSON.parse(unparsedProducts);
+    return products;
+  }
+
   const products = await prisma.category.findMany({
     select: {
       id: true,
@@ -75,7 +106,11 @@ const FindAllCategoryFeaturedProducts = async () => {
       },
     },
   });
-
+  await redisClient.setEx(
+    `featured-products`,
+    300,
+    JSON.stringify(unparsedProducts)
+  );
   return products;
 };
 
