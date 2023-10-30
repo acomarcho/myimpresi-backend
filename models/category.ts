@@ -79,44 +79,8 @@ export type FeaturedCategories = {
   }[];
 }[];
 
-const FindAllCategoryFeaturedProducts = async () => {
-  const unparsedProducts = await redisClient.get(`featured-products`);
-  if (unparsedProducts) {
-    const products: FeaturedCategories = JSON.parse(unparsedProducts);
-    return products;
-  }
-
-  const products = await prisma.category.findMany({
-    select: {
-      id: true,
-      name: true,
-      subcategory: {
-        select: {
-          id: true,
-          name: true,
-          product: {
-            where: {
-              isFeaturedAtCategory: true,
-            },
-            include: {
-              productImage: true,
-            },
-          },
-        },
-      },
-    },
-  });
-  await redisClient.setEx(
-    `featured-products`,
-    300,
-    JSON.stringify(unparsedProducts)
-  );
-  return products;
-};
-
 export default {
   FindAllCategories,
   FindCategoryById,
   SaveCategory,
-  FindAllCategoryFeaturedProducts,
 };

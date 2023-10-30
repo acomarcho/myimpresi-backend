@@ -33,6 +33,19 @@ const SaveProduct = async (req: Request, res: Response) => {
   }
 };
 
+const FindFeaturedProducts = async (req: Request, res: Response) => {
+  try {
+    const products = await ProductService.FindFeaturedProducts();
+
+    res.status(200).json({
+      data: products,
+    });
+  } catch (e) {
+    handleError(e, res);
+  }
+};
+
 export default {
   SaveProduct,
+  FindFeaturedProducts,
 };

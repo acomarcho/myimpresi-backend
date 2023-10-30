@@ -37,18 +37,6 @@ const SaveCategory = async (req: Request, res: Response) => {
   }
 };
 
-const FindAllCategoryFeaturedProducts = async (req: Request, res: Response) => {
-  try {
-    const products = await CategoryService.FindAllCategoryFeaturedProducts();
-
-    res.status(200).json({
-      data: products,
-    });
-  } catch (e) {
-    handleError(e, res);
-  }
-};
-
 const FindProductsByCategory = async (req: Request, res: Response) => {
   try {
     const { id: categoryId } = req.params;
@@ -66,6 +54,5 @@ const FindProductsByCategory = async (req: Request, res: Response) => {
 export default {
   FindAllCategories,
   SaveCategory,
-  FindAllCategoryFeaturedProducts,
   FindProductsByCategory,
 };

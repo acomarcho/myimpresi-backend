@@ -13,5 +13,7 @@ router.post(
   upload.array("files"),
   ProductController.SaveProduct
 );
+// GET /product/featured
+router.get("/featured", ProductController.FindFeaturedProducts);
 
 export default router;

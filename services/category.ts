@@ -39,13 +39,7 @@ const SaveCategory = async (file: Express.Multer.File, name: string) => {
   return newCategory;
 };
 
-const FindAllCategoryFeaturedProducts = async () => {
-  const products = await CategoryModel.FindAllCategoryFeaturedProducts();
-  return products;
-};
-
 export default {
   FindAllCategories,
   SaveCategory,
-  FindAllCategoryFeaturedProducts,
 };

@@ -63,8 +63,14 @@ const FindProductsByCategory = async (categoryId: string) => {
   return products;
 };
 
+const FindFeaturedProducts = async () => {
+  const products = await ProductModel.FindFeaturedProducts();
+  return products;
+};
+
 export default {
   SaveProduct,
   FindProductsBySubcategory,
   FindProductsByCategory,
+  FindFeaturedProducts,
 };
