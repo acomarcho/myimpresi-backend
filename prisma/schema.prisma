@@ -38,6 +38,11 @@ model Product {
   subcategoryId        String         @db.Uuid
   productImage         ProductImage[]
   isFeaturedAtCategory Boolean        @default(false)
+  colors               String[]       @default([])
+  material             String
+  size                 String
+  rank                 Int?
+  productPromo         String?
 }
 
 model ProductImage {
