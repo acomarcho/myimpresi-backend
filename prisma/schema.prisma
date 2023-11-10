@@ -43,6 +43,7 @@ model Product {
   size                 String
   rank                 Int?
   productPromo         String?
+  events               Event[]
 }
 
 model ProductImage {
@@ -64,4 +65,11 @@ model Article {
   content   String
   imagePath String
   rank      Int?
+}
+
+model Event {
+  id       String    @id @default(dbgenerated("gen_random_uuid()"))
+  name     String    @unique
+  products Product[]
+  rank     Int?
 }
