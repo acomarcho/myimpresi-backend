@@ -57,3 +57,11 @@ model Banner {
   imagePath String
   rank      Int?
 }
+
+model Article {
+  id        String @id @default(dbgenerated("gen_random_uuid()"))
+  title     String
+  content   String
+  imagePath String
+  rank      Int?
+}
