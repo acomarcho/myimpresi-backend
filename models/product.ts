@@ -123,7 +123,11 @@ const FindProduct = async (productId: string) => {
       id: productId,
     },
     include: {
-      productImage: true,
+      productImage: {
+        orderBy: {
+          isMainImage: "desc",
+        },
+      },
     },
   });
   await redisClient.setEx(redisKey, 300, JSON.stringify(product));
