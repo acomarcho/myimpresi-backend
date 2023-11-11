@@ -56,7 +56,11 @@ const FindProductsBySubcategory = async (subcategoryId: string) => {
       subcategoryId: subcategoryId,
     },
     include: {
-      productImage: true,
+      productImage: {
+        orderBy: {
+          isMainImage: "desc",
+        },
+      },
     },
   });
   await redisClient.setEx(
@@ -83,7 +87,11 @@ const FindProductsByCategory = async (categoryId: string) => {
       },
     },
     include: {
-      productImage: true,
+      productImage: {
+        orderBy: {
+          isMainImage: "desc",
+        },
+      },
     },
   });
   await redisClient.setEx(
@@ -107,7 +115,11 @@ const FindFeaturedProducts = async () => {
       isFeaturedAtCategory: true,
     },
     include: {
-      productImage: true,
+      productImage: {
+        orderBy: {
+          isMainImage: "desc",
+        },
+      },
     },
   });
   await redisClient.setEx(redisKey, 300, JSON.stringify(products));
