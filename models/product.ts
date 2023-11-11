@@ -122,6 +122,9 @@ const FindProduct = async (productId: string) => {
     where: {
       id: productId,
     },
+    include: {
+      productImage: true,
+    },
   });
   await redisClient.setEx(redisKey, 300, JSON.stringify(product));
   return product;
