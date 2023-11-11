@@ -16,6 +16,10 @@ const SaveProduct = async (product: Product, imagePaths: string[]) => {
         minimumOrder: product.minimumOrder,
         description: product.description,
         subcategoryId: product.subcategoryId,
+        isFeaturedAtCategory: product.isFeaturedAtCategory,
+        colors: product.colors,
+        material: product.material,
+        size: product.size,
       },
     });
 
