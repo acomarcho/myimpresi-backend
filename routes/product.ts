@@ -16,13 +16,13 @@ router.post(
   ]),
   ProductController.SaveProduct
 );
+// GET /product
+router.get("/", ProductController.FindProducts);
 // GET /product/featured
 router.get("/featured", ProductController.FindFeaturedProducts);
 // GET /product/promo
 router.get("/promo", ProductController.FindPromoProducts);
 // GET /product/:id
 router.get("/:id", ProductController.FindProduct);
-// GET /product
-router.get("/", ProductController.FindProduct);
 
 export default router;
