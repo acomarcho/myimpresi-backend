@@ -1,5 +1,5 @@
 import prisma from "@utils/prisma";
-import { Product, ProductImage } from "@prisma/client";
+import { Prisma, Product, ProductImage } from "@prisma/client";
 import { redisClient } from "@utils/redis";
 
 export type ProductWithProductImage = {
@@ -176,6 +176,114 @@ const FindPromoProducts = async () => {
   return products;
 };
 
+type FindProductsFilter = {
+  page: number;
+  pageSize: number;
+  categoryId?: string;
+  subcategoryId?: string;
+  sort?: string;
+  search?: string;
+};
+
+const findProductSorts = {
+  recommendation: "RECOMMENDED",
+  lowestPrice: "LOWEST_PRICE",
+  highestPrice: "HIGHEST_PRICE",
+};
+
+const FindProducts = async (filter: FindProductsFilter) => {
+  let whereFilter: Prisma.ProductWhereInput = {};
+  if (filter.categoryId) {
+    whereFilter = {
+      ...whereFilter,
+      subcategory: {
+        category: {
+          id: filter.categoryId,
+        },
+      },
+    };
+  }
+  if (filter.subcategoryId) {
+    whereFilter = {
+      ...whereFilter,
+      subcategory: {
+        id: filter.subcategoryId,
+      },
+    };
+  }
+  if (filter.search) {
+    whereFilter = {
+      ...whereFilter,
+      OR: [
+        {
+          name: {
+            contains: filter.search,
+            mode: "insensitive",
+          },
+        },
+        {
+          subcategory: {
+            name: {
+              contains: filter.search,
+              mode: "insensitive",
+            },
+          },
+        },
+        {
+          subcategory: {
+            category: {
+              name: {
+                contains: filter.search,
+                mode: "insensitive",
+              },
+            },
+          },
+        },
+      ],
+    };
+  }
+
+  let orderByFilter: Prisma.ProductOrderByWithRelationInput = {};
+  if (filter.sort) {
+    if (filter.sort === findProductSorts.recommendation) {
+      orderByFilter = {
+        rank: {
+          sort: "asc",
+          nulls: "last",
+        },
+      };
+    } else if (filter.sort === findProductSorts.lowestPrice) {
+      orderByFilter = {
+        price: "asc",
+      };
+    } else if (filter.sort === findProductSorts.lowestPrice) {
+      orderByFilter = {
+        price: "desc",
+      };
+    }
+  }
+
+  const products = await prisma.product.findMany({
+    where: whereFilter,
+    orderBy: orderByFilter,
+    include: {
+      productImage: {
+        orderBy: {
+          isMainImage: "desc",
+        },
+      },
+    },
+    take: filter.pageSize,
+    skip: (filter.page - 1) * filter.pageSize,
+  });
+
+  const productCount = await prisma.product.count({
+    where: whereFilter,
+  });
+
+  return [products, productCount];
+};
+
 export default {
   SaveProduct,
   FindProductsBySubcategory,
@@ -183,4 +291,5 @@ export default {
   FindFeaturedProducts,
   FindProduct,
   FindPromoProducts,
+  FindProducts,
 };
