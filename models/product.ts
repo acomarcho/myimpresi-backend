@@ -248,7 +248,7 @@ const FindProducts = async (filter: FindProductsFilter) => {
       orderByFilter = {
         price: "asc",
       };
-    } else if (filter.sort === findProductSorts.lowestPrice) {
+    } else if (filter.sort === findProductSorts.highestPrice) {
       orderByFilter = {
         price: "desc",
       };
