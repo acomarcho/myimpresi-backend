@@ -23,13 +23,17 @@ const SaveProduct = async (product: Product, imagePaths: string[]) => {
       },
     });
 
+    let currIndex = 0;
     for (const imagePath of imagePaths) {
       await tx.productImage.create({
         data: {
           path: imagePath,
           productId: createdProduct.id,
+          isMainImage: currIndex === 0,
         },
       });
+
+      currIndex += 1;
     }
 
     return createdProduct;

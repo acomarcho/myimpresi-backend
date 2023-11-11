@@ -7,7 +7,11 @@ import supabase from "@utils/supabase";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
 
-const SaveProduct = async (product: Product, images: Express.Multer.File[]) => {
+const SaveProduct = async (
+  product: Product,
+  mainImage: Express.Multer.File[],
+  additionalImages: Express.Multer.File[]
+) => {
   const subcategory = await SubcategoryModel.FindSubcategoryById(
     product.subcategoryId
   );
@@ -17,8 +21,9 @@ const SaveProduct = async (product: Product, images: Express.Multer.File[]) => {
   }
 
   const imageUrls: string[] = [];
+  const imagesToUpload = [...mainImage, ...additionalImages];
 
-  for (const file of images) {
+  for (const file of imagesToUpload) {
     const uuid = uuidv4();
     const fileName = `${uuid}${path.extname(file.originalname)}`;
 

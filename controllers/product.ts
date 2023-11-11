@@ -6,12 +6,16 @@ import { Product } from "@prisma/client";
 
 const SaveProduct = async (req: Request, res: Response) => {
   try {
-    const file = req.files;
+    const files = req.files as {
+      [fieldname: string]: Express.Multer.File[];
+    };
 
-    if (!file) {
-      throw createHttpError(400, null, "No file supplied");
+    const mainImage = files["mainImage"];
+    const additionalImages = files["additionalImages"];
+
+    if (!mainImage || mainImage.length === 0) {
+      throw createHttpError(400, null, "No main image supplied");
     }
-
     const { product }: SaveProductRequest = req.body;
 
     if (!product) {
@@ -22,7 +26,8 @@ const SaveProduct = async (req: Request, res: Response) => {
 
     const newProduct = await ProductService.SaveProduct(
       productObject,
-      file as Express.Multer.File[]
+      mainImage,
+      additionalImages
     );
 
     res.status(200).json({

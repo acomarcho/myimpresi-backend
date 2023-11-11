@@ -10,7 +10,10 @@ const router = express.Router();
 router.post(
   "/",
   checkApiKey,
-  upload.array("files"),
+  upload.fields([
+    { name: "mainImage", maxCount: 1 },
+    { name: "additionalImages", maxCount: 10 },
+  ]),
   ProductController.SaveProduct
 );
 // GET /product/featured
