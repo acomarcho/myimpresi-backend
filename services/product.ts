@@ -6,6 +6,7 @@ import { Product } from "@prisma/client";
 import supabase from "@utils/supabase";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
+import { FindProductsFilter } from "@constants/requests";
 
 const SaveProduct = async (
   product: Product,
@@ -83,6 +84,19 @@ const FindPromoProducts = async () => {
   return products;
 };
 
+const FindProducts = async (findProductsFilter: FindProductsFilter) => {
+  const { products, productCount } = await ProductModel.FindProducts(
+    findProductsFilter
+  );
+
+  const paginationData = {
+    total: productCount,
+    totalPages: Math.ceil(productCount / findProductsFilter.pageSize),
+  };
+
+  return [products, paginationData];
+};
+
 export default {
   SaveProduct,
   FindProductsBySubcategory,
@@ -90,4 +104,5 @@ export default {
   FindFeaturedProducts,
   FindProduct,
   FindPromoProducts,
+  FindProducts,
 };

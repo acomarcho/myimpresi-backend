@@ -1,6 +1,7 @@
 import prisma from "@utils/prisma";
 import { Prisma, Product, ProductImage } from "@prisma/client";
 import { redisClient } from "@utils/redis";
+import { FindProductsFilter } from "@constants/requests";
 
 export type ProductWithProductImage = {
   productImage: ProductImage[];
@@ -176,15 +177,6 @@ const FindPromoProducts = async () => {
   return products;
 };
 
-type FindProductsFilter = {
-  page: number;
-  pageSize: number;
-  categoryId?: string;
-  subcategoryId?: string;
-  sort?: string;
-  search?: string;
-};
-
 const findProductSorts = {
   recommendation: "RECOMMENDED",
   lowestPrice: "LOWEST_PRICE",
@@ -281,7 +273,7 @@ const FindProducts = async (filter: FindProductsFilter) => {
     where: whereFilter,
   });
 
-  return [products, productCount];
+  return { products, productCount };
 };
 
 export default {
