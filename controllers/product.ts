@@ -67,8 +67,21 @@ const FindProduct = async (req: Request, res: Response) => {
   }
 };
 
+const FindPromoProducts = async (req: Request, res: Response) => {
+  try {
+    const products = await ProductService.FindPromoProducts();
+
+    res.status(200).json({
+      data: products,
+    });
+  } catch (e) {
+    handleError(e, res);
+  }
+};
+
 export default {
   SaveProduct,
   FindFeaturedProducts,
   FindProduct,
+  FindPromoProducts,
 };

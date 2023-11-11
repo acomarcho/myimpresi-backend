@@ -150,10 +150,37 @@ const FindProduct = async (productId: string) => {
   return product;
 };
 
+const FindPromoProducts = async () => {
+  const redisKey = `promo-products`;
+  const unparsedProducts = await redisClient.get(redisKey);
+  if (unparsedProducts) {
+    const products: ProductWithProductImage[] = JSON.parse(unparsedProducts);
+    return products;
+  }
+
+  const products = await prisma.product.findMany({
+    where: {
+      productPromo: {
+        not: null,
+      },
+    },
+    include: {
+      productImage: {
+        orderBy: {
+          isMainImage: "desc",
+        },
+      },
+    },
+  });
+  await redisClient.setEx(redisKey, 300, JSON.stringify(products));
+  return products;
+};
+
 export default {
   SaveProduct,
   FindProductsBySubcategory,
   FindProductsByCategory,
   FindFeaturedProducts,
   FindProduct,
+  FindPromoProducts,
 };
