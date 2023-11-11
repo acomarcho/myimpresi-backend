@@ -17,6 +17,9 @@ const FindAllCategories = async () => {
         nulls: "last",
       },
     },
+    include: {
+      subcategory: true,
+    },
   });
   await redisClient.setEx("categories", 300, JSON.stringify(categories));
   return categories;
