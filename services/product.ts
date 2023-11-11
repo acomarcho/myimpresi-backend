@@ -94,7 +94,7 @@ const FindProducts = async (findProductsFilter: FindProductsFilter) => {
     totalPages: Math.ceil(productCount / findProductsFilter.pageSize),
   };
 
-  return [products, paginationData];
+  return { products, paginationData };
 };
 
 export default {

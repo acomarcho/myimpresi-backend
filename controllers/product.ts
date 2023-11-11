@@ -1,6 +1,6 @@
 import ProductService from "@services/product";
 import { Request, Response } from "express";
-import { SaveProductRequest } from "@constants/requests";
+import { FindProductsFilter, SaveProductRequest } from "@constants/requests";
 import { createHttpError, handleError } from "@utils/error";
 import { Product } from "@prisma/client";
 
@@ -79,9 +79,47 @@ const FindPromoProducts = async (req: Request, res: Response) => {
   }
 };
 
+const FindProducts = async (req: Request, res: Response) => {
+  try {
+    const { page, pageSize, categoryId, subcategoryId, sort, search } =
+      req.query;
+
+    if (!page) {
+      throw createHttpError(400, null, "Must include page");
+    }
+    if (!pageSize) {
+      throw createHttpError(400, null, "Must include page size");
+    }
+    if (Number(pageSize) > 20) {
+      throw createHttpError(404, null, "Page size too big");
+    }
+
+    const findProductsFilter: FindProductsFilter = {
+      page: Number(page),
+      pageSize: Number(pageSize),
+      categoryId: categoryId as string | undefined,
+      subcategoryId: subcategoryId as string | undefined,
+      sort: sort as string | undefined,
+      search: search as string | undefined,
+    };
+
+    const { products, paginationData } = await ProductService.FindProducts(
+      findProductsFilter
+    );
+
+    res.status(200).json({
+      data: products,
+      pagination: paginationData,
+    });
+  } catch (e) {
+    handleError(e, res);
+  }
+};
+
 export default {
   SaveProduct,
   FindFeaturedProducts,
   FindProduct,
   FindPromoProducts,
+  FindProducts,
 };
