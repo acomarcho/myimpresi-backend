@@ -26,6 +26,19 @@ const FindAllArticles = async () => {
   return articles;
 };
 
+const SaveArticle = async (article: Article) => {
+  const newArticle = await prisma.article.create({
+    data: {
+      title: article.title,
+      content: article.content,
+      imagePath: article.imagePath,
+    },
+  });
+
+  return newArticle;
+};
+
 export default {
   FindAllArticles,
+  SaveArticle,
 };
