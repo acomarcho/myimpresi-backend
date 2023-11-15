@@ -33,7 +33,21 @@ const FindSubcategoryById = async (id: string) => {
   return subcategory;
 };
 
+const FindAllSubcategories = async () => {
+  const redisKey = "subcategories:all";
+  const unparsedSubcategories = await redisClient.get(redisKey);
+  if (unparsedSubcategories) {
+    const subcategories: Subcategory[] = JSON.parse(unparsedSubcategories);
+    return subcategories;
+  }
+
+  const subcategories = await prisma.subcategory.findMany();
+  await redisClient.setEx(redisKey, 300, JSON.stringify(subcategories));
+  return subcategories;
+};
+
 export default {
   SaveSubcategory,
   FindSubcategoryById,
+  FindAllSubcategories,
 };

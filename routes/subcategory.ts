@@ -13,6 +13,8 @@ router.post(
   bodyParser.json(),
   SubcategoryController.SaveSubcategory
 );
+// GET /subcategory
+router.get("/", SubcategoryController.FindAllSubcategories);
 // GET /subcategory/:id/product
 router.get("/:id/product", SubcategoryController.FindProductsBySubcategory);
 

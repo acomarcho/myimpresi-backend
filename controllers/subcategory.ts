@@ -43,7 +43,20 @@ const FindProductsBySubcategory = async (req: Request, res: Response) => {
   }
 };
 
+const FindAllSubcategories = async (req: Request, res: Response) => {
+  try {
+    const subcategories = await SubcategoryService.FindAllSubcategories();
+
+    res.status(200).json({
+      data: subcategories,
+    });
+  } catch (e) {
+    handleError(e, res);
+  }
+};
+
 export default {
   SaveSubcategory,
   FindProductsBySubcategory,
+  FindAllSubcategories,
 };

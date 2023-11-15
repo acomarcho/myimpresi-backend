@@ -12,6 +12,12 @@ const SaveSubcategory = async (name: string, categoryId: string) => {
   return subcategory;
 };
 
+const FindAllSubcategories = async () => {
+  const subcategories = await SubcategoryModel.FindAllSubcategories();
+  return subcategories;
+};
+
 export default {
   SaveSubcategory,
+  FindAllSubcategories,
 };
