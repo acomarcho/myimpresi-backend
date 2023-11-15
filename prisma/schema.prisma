@@ -44,6 +44,7 @@ model Product {
   rank                 Int?
   productPromo         String?
   events               Event[]
+  sku                  String?        @unique
 }
 
 model ProductImage {

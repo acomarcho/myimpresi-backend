@@ -21,6 +21,7 @@ const SaveProduct = async (product: Product, imagePaths: string[]) => {
         colors: product.colors,
         material: product.material,
         size: product.size,
+        sku: product.sku,
       },
     });
 
