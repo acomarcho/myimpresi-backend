@@ -26,6 +26,17 @@ const FindAllEvents = async () => {
   return events;
 };
 
+const SaveEvent = async (event: Event) => {
+  const newEvent = await prisma.event.create({
+    data: {
+      name: event.name,
+    },
+  });
+
+  return newEvent;
+};
+
 export default {
   FindAllEvents,
+  SaveEvent,
 };
