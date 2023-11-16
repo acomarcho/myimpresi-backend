@@ -11,7 +11,7 @@ import { FindProductsFilter } from "@constants/requests";
 const SaveProduct = async (
   product: Product,
   mainImage: Express.Multer.File[],
-  additionalImages: Express.Multer.File[]
+  additionalImages: Express.Multer.File[] | undefined
 ) => {
   const subcategory = await SubcategoryModel.FindSubcategoryById(
     product.subcategoryId
@@ -22,7 +22,10 @@ const SaveProduct = async (
   }
 
   const imageUrls: string[] = [];
-  const imagesToUpload = [...mainImage, ...additionalImages];
+  let imagesToUpload = [...mainImage];
+  if (additionalImages) {
+    imagesToUpload = [...imagesToUpload, ...additionalImages];
+  }
 
   for (const file of imagesToUpload) {
     const uuid = uuidv4();
