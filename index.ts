@@ -11,6 +11,7 @@ import BannerRouter from "@routes/banner";
 import SubcategoryRouter from "@routes/subcategory";
 import ProductRouter from "@routes/product";
 import ArticleRouter from "@routes/article";
+import EventRouter from "@routes/event";
 import GSheetRouter from "@routes/gsheet";
 
 dotenv.config();
@@ -27,6 +28,7 @@ app.use("/banner", BannerRouter);
 app.use("/subcategory", SubcategoryRouter);
 app.use("/product", ProductRouter);
 app.use("/article", ArticleRouter);
+app.use("/event", EventRouter);
 app.use("/gsheet", GSheetRouter);
 
 const port = process.env.PORT;
