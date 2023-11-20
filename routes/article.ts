@@ -15,5 +15,7 @@ router.post(
   upload.single("file"),
   ArticleController.SaveArticle
 );
+// GET /article/:id
+router.get("/:id", ArticleController.FindArticleById);
 
 export default router;
