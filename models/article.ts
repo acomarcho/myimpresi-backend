@@ -5,6 +5,7 @@ import { Article } from "@prisma/client";
 
 const redisKeys = {
   allArticles: "articles:all",
+  article: (id: string) => `articles:${id}`,
 };
 
 const FindAllArticles = async () => {
@@ -38,7 +39,25 @@ const SaveArticle = async (article: Article) => {
   return newArticle;
 };
 
+const FindArticleById = async (articleId: string) => {
+  const redisKey = redisKeys.article(articleId);
+  const unparsedArticle = await redisClient.get(redisKey);
+  if (unparsedArticle) {
+    const articles: Article = JSON.parse(unparsedArticle);
+    return articles;
+  }
+
+  const article = await prisma.article.findUnique({
+    where: {
+      id: articleId,
+    },
+  });
+  await redisClient.setEx(redisKey, 300, JSON.stringify(article));
+  return article;
+};
+
 export default {
   FindAllArticles,
   SaveArticle,
+  FindArticleById,
 };
