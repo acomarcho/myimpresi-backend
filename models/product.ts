@@ -2,6 +2,7 @@ import prisma from "@utils/prisma";
 import { Prisma, Product, ProductImage } from "@prisma/client";
 import { redisClient } from "@utils/redis";
 import { FindProductsFilter } from "@constants/requests";
+import { createHttpError } from "@utils/error";
 
 export type ProductWithProductImage = {
   productImage: ProductImage[];
@@ -277,6 +278,45 @@ const FindProducts = async (filter: FindProductsFilter) => {
   return { products, productCount };
 };
 
+const FindSimilarProductsFromProductId = async (productId: string) => {
+  /**
+   * Logic: Find a product based on same category
+   */
+  const product = await prisma.product.findUnique({
+    include: {
+      subcategory: {
+        include: {
+          category: true,
+        },
+      },
+    },
+    where: {
+      id: productId,
+    },
+  });
+
+  if (!product) {
+    throw createHttpError(400, null, "Product not found");
+  }
+
+  const similarProducts = await prisma.product.findMany({
+    where: {
+      subcategory: {
+        categoryId: product.subcategory.categoryId,
+      },
+    },
+    include: {
+      productImage: {
+        orderBy: {
+          isMainImage: "desc",
+        },
+      },
+    },
+  });
+
+  return similarProducts;
+};
+
 export default {
   SaveProduct,
   FindProductsBySubcategory,
@@ -285,4 +325,5 @@ export default {
   FindProduct,
   FindPromoProducts,
   FindProducts,
+  FindSimilarProductsFromProductId,
 };
