@@ -24,5 +24,10 @@ router.get("/featured", ProductController.FindFeaturedProducts);
 router.get("/promo", ProductController.FindPromoProducts);
 // GET /product/:id
 router.get("/:id", ProductController.FindProduct);
+// GET /product/:id/similar-products
+router.get(
+  "/:id/similar-products",
+  ProductController.FindSimilarProductsFromProductId
+);
 
 export default router;

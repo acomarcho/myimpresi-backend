@@ -2,10 +2,15 @@ import prisma from "@utils/prisma";
 import { Prisma, Product, ProductImage } from "@prisma/client";
 import { redisClient } from "@utils/redis";
 import { FindProductsFilter } from "@constants/requests";
+import { createHttpError } from "@utils/error";
 
 export type ProductWithProductImage = {
   productImage: ProductImage[];
 } & Product;
+
+const redisKeys = {
+  similarProducts: (id: string) => `products:${id}:similar_products`,
+};
 
 const SaveProduct = async (product: Product, imagePaths: string[]) => {
   const newProduct = await prisma.$transaction(async (tx) => {
@@ -235,6 +240,16 @@ const FindProducts = async (filter: FindProductsFilter) => {
       ],
     };
   }
+  if (filter.eventId) {
+    whereFilter = {
+      ...whereFilter,
+      events: {
+        some: {
+          id: filter.eventId,
+        },
+      },
+    };
+  }
 
   let orderByFilter: Prisma.ProductOrderByWithRelationInput = {};
   if (filter.sort) {
@@ -277,6 +292,50 @@ const FindProducts = async (filter: FindProductsFilter) => {
   return { products, productCount };
 };
 
+const FindSimilarProductsFromProductId = async (productId: string) => {
+  /**
+   * Logic: Find a product based on same category
+   */
+  const redisKey = redisKeys.similarProducts(productId);
+  const unparsedProducts = await redisClient.get(redisKey);
+  if (unparsedProducts) {
+    const similarProducts: ProductWithProductImage[] =
+      JSON.parse(unparsedProducts);
+    return similarProducts;
+  }
+
+  const product = await prisma.product.findUnique({
+    include: {
+      subcategory: true,
+    },
+    where: {
+      id: productId,
+    },
+  });
+
+  if (!product) {
+    throw createHttpError(400, null, "Product not found");
+  }
+
+  const similarProducts = await prisma.product.findMany({
+    where: {
+      subcategory: {
+        categoryId: product.subcategory.categoryId,
+      },
+    },
+    include: {
+      productImage: {
+        orderBy: {
+          isMainImage: "desc",
+        },
+      },
+    },
+  });
+  await redisClient.setEx(redisKey, 300, JSON.stringify(similarProducts));
+
+  return similarProducts;
+};
+
 export default {
   SaveProduct,
   FindProductsBySubcategory,
@@ -285,4 +344,5 @@ export default {
   FindProduct,
   FindPromoProducts,
   FindProducts,
+  FindSimilarProductsFromProductId,
 };
