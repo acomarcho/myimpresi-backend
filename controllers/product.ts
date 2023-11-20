@@ -81,7 +81,7 @@ const FindPromoProducts = async (req: Request, res: Response) => {
 
 const FindProducts = async (req: Request, res: Response) => {
   try {
-    const { page, pageSize, categoryId, subcategoryId, sort, search } =
+    const { page, pageSize, categoryId, subcategoryId, sort, search, eventId } =
       req.query;
 
     if (!page) {
@@ -101,6 +101,7 @@ const FindProducts = async (req: Request, res: Response) => {
       subcategoryId: subcategoryId as string | undefined,
       sort: sort as string | undefined,
       search: search as string | undefined,
+      eventId: eventId as string | undefined,
     };
 
     const { products, paginationData } = await ProductService.FindProducts(
