@@ -100,6 +100,14 @@ const FindProducts = async (findProductsFilter: FindProductsFilter) => {
   return { products, paginationData };
 };
 
+const FindSimilarProductsFromProductId = async (productId: string) => {
+  const similarProducts = await ProductModel.FindSimilarProductsFromProductId(
+    productId
+  );
+
+  return similarProducts;
+};
+
 export default {
   SaveProduct,
   FindProductsBySubcategory,
@@ -108,4 +116,5 @@ export default {
   FindProduct,
   FindPromoProducts,
   FindProducts,
+  FindSimilarProductsFromProductId,
 };
