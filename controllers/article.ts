@@ -52,7 +52,9 @@ const FindArticleById = async (req: Request, res: Response) => {
     }
 
     const data = await ArticleService.FindArticleById(articleId);
-    res.status(200).json(data);
+    res.status(200).json({
+      data: data,
+    });
   } catch (e) {
     handleError(e, res);
   }
