@@ -116,10 +116,33 @@ const FindProducts = async (req: Request, res: Response) => {
   }
 };
 
+const FindSimilarProductsFromProductId = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { id: productId } = req.params;
+
+    if (!productId) {
+      throw createHttpError(400, null, "Must give product ID");
+    }
+
+    const similarProducts =
+      ProductService.FindSimilarProductsFromProductId(productId);
+
+    res.status(200).json({
+      data: similarProducts,
+    });
+  } catch (e) {
+    handleError(e, res);
+  }
+};
+
 export default {
   SaveProduct,
   FindFeaturedProducts,
   FindProduct,
   FindPromoProducts,
   FindProducts,
+  FindSimilarProductsFromProductId,
 };
