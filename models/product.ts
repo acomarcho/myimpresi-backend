@@ -284,11 +284,7 @@ const FindSimilarProductsFromProductId = async (productId: string) => {
    */
   const product = await prisma.product.findUnique({
     include: {
-      subcategory: {
-        include: {
-          category: true,
-        },
-      },
+      subcategory: true,
     },
     where: {
       id: productId,

@@ -128,7 +128,7 @@ const FindSimilarProductsFromProductId = async (
     }
 
     const similarProducts =
-      ProductService.FindSimilarProductsFromProductId(productId);
+      await ProductService.FindSimilarProductsFromProductId(productId);
 
     res.status(200).json({
       data: similarProducts,
