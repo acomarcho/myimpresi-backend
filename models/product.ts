@@ -8,6 +8,10 @@ export type ProductWithProductImage = {
   productImage: ProductImage[];
 } & Product;
 
+const redisKeys = {
+  similarProducts: (id: string) => `products:${id}:similar_products`,
+};
+
 const SaveProduct = async (product: Product, imagePaths: string[]) => {
   const newProduct = await prisma.$transaction(async (tx) => {
     const createdProduct = await tx.product.create({
@@ -282,6 +286,14 @@ const FindSimilarProductsFromProductId = async (productId: string) => {
   /**
    * Logic: Find a product based on same category
    */
+  const redisKey = redisKeys.similarProducts(productId);
+  const unparsedProducts = await redisClient.get(redisKey);
+  if (unparsedProducts) {
+    const similarProducts: ProductWithProductImage[] =
+      JSON.parse(unparsedProducts);
+    return similarProducts;
+  }
+
   const product = await prisma.product.findUnique({
     include: {
       subcategory: true,
@@ -309,6 +321,7 @@ const FindSimilarProductsFromProductId = async (productId: string) => {
       },
     },
   });
+  await redisClient.setEx(redisKey, 300, JSON.stringify(similarProducts));
 
   return similarProducts;
 };
