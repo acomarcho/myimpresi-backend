@@ -240,6 +240,16 @@ const FindProducts = async (filter: FindProductsFilter) => {
       ],
     };
   }
+  if (filter.eventId) {
+    whereFilter = {
+      ...whereFilter,
+      events: {
+        some: {
+          id: filter.eventId,
+        },
+      },
+    };
+  }
 
   let orderByFilter: Prisma.ProductOrderByWithRelationInput = {};
   if (filter.sort) {
