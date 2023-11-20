@@ -47,7 +47,14 @@ const SaveArticle = async (req: SaveArticleRequest) => {
   return newArticle;
 };
 
+const FindArticleById = async (articleId: string) => {
+  const article = await ArticleModel.FindArticleById(articleId);
+
+  return article;
+};
+
 export default {
   FindAllArticles,
   SaveArticle,
+  FindArticleById,
 };
