@@ -1,6 +1,8 @@
 import { HttpError } from "@constants/errors";
 import { Response } from "express";
+import { ZodError } from "zod-validation-error";
 import { logger } from "./logger";
+import { fromZodError } from "zod-validation-error";
 
 export function createHttpError(
   status: number,
@@ -11,6 +13,18 @@ export function createHttpError(
     status,
     error,
     message,
+  };
+}
+
+export function createHttpZodError(
+  status: number,
+  error: any,
+  zodError: ZodError
+): HttpError {
+  return {
+    status,
+    error,
+    message: fromZodError(zodError).message,
   };
 }
 

@@ -1,18 +1,17 @@
 import SubcategoryService from "@services/subcategory";
 import ProductService from "@services/product";
 import { Request, Response } from "express";
-import { SaveSubcategoryRequest } from "@constants/requests";
-import { createHttpError, handleError } from "@utils/error";
+import { SaveSubcategorySchema } from "@constants/requests";
+import { createHttpZodError, handleError } from "@utils/error";
 
 const SaveSubcategory = async (req: Request, res: Response) => {
   try {
-    const { name, categoryId }: SaveSubcategoryRequest = req.body;
-    if (!name) {
-      throw createHttpError(400, null, "No name supplied");
+    const parsedBody = SaveSubcategorySchema.safeParse(req.body);
+    if (!parsedBody.success) {
+      throw createHttpZodError(400, null, parsedBody.error);
     }
-    if (!categoryId) {
-      throw createHttpError(400, null, "No category ID supplied");
-    }
+
+    const { name, categoryId } = parsedBody.data;
 
     const subcategory = await SubcategoryService.SaveSubcategory(
       name,
@@ -43,7 +42,7 @@ const FindProductsBySubcategory = async (req: Request, res: Response) => {
   }
 };
 
-const FindAllSubcategories = async (req: Request, res: Response) => {
+const FindAllSubcategories = async (_req: Request, res: Response) => {
   try {
     const subcategories = await SubcategoryService.FindAllSubcategories();
 
