@@ -1,9 +1,10 @@
 import ArticleService from "@services/article";
 import { Request, Response } from "express";
-import { createHttpError, handleError } from "@utils/error";
-import { SaveArticleRequest } from "@constants/requests";
+import { createHttpError, createHttpZodError, handleError } from "@utils/error";
+import { SaveArticleSchema } from "@constants/requests";
+import { z } from "zod";
 
-const FindAllArticles = async (req: Request, res: Response) => {
+const FindAllArticles = async (_req: Request, res: Response) => {
   try {
     const data = await ArticleService.FindAllArticles();
     res.status(200).json(data);
@@ -15,20 +16,15 @@ const FindAllArticles = async (req: Request, res: Response) => {
 const SaveArticle = async (req: Request, res: Response) => {
   try {
     const file = req.file;
-
     if (!file) {
       throw createHttpError(400, null, "No file supplied");
     }
 
-    const { title, content }: SaveArticleRequest = req.body;
-
-    if (!title) {
-      throw createHttpError(400, null, "No title supplied");
+    const parsedBody = SaveArticleSchema.safeParse(req.body);
+    if (!parsedBody.success) {
+      throw createHttpZodError(400, null, parsedBody.error);
     }
-
-    if (!content) {
-      throw createHttpError(400, null, "No content supplied");
-    }
+    const { title, content } = parsedBody.data;
 
     const newArticle = await ArticleService.SaveArticle({
       title,
@@ -46,10 +42,22 @@ const SaveArticle = async (req: Request, res: Response) => {
 
 const FindArticleById = async (req: Request, res: Response) => {
   try {
-    const { id: articleId } = req.params;
-    if (!articleId) {
-      throw createHttpError(400, null, "ID is required");
+    const schema = z.object({
+      id: z
+        .string({
+          invalid_type_error: "ID must be a string",
+          required_error: "ID is required",
+        })
+        .uuid({
+          message: "ID must be a valid UUID",
+        }),
+    });
+    const parsedParams = schema.safeParse(req.params);
+    if (!parsedParams.success) {
+      throw createHttpZodError(400, null, parsedParams.error);
     }
+
+    const { id: articleId } = parsedParams.data;
 
     const data = await ArticleService.FindArticleById(articleId);
     res.status(200).json({
